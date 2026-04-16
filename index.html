@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Nzioki — Data Portfolio</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-dark: #0F6E56;
+    --blue: #378ADD; --blue-light: #E6F1FB; --blue-dark: #185FA5;
+    --purple: #7F77DD; --purple-light: #EEEDFE; --purple-dark: #534AB7;
+    --amber: #EF9F27; --amber-light: #FAEEDA; --amber-dark: #854F0B;
+    --coral: #D85A30;
+    --bg: #ffffff; --bg2: #F7F8FA; --border: #E4E7EC;
+    --text: #111827; --text2: #6B7280;
+    --radius: 10px; --radius-sm: 6px;
+    --font: 'Segoe UI', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg2); color: var(--text); }
+  .pf { max-width: 940px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  /* HERO */
+  .hero { display: flex; align-items: flex-start; gap: 18px; padding: 1.25rem 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1.1rem; }
+  .av { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg,#1D9E75,#378ADD); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: #fff; flex-shrink: 0; }
+  .hero h1 { font-size: 21px; font-weight: 600; color: var(--text); }
+  .hero .sub { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.6; }
+  .hero .email { font-size: 12px; color: var(--blue-dark); margin-top: 5px; }
+  .bdgs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .b { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; cursor: pointer; transition: all .18s; border: 1.5px solid transparent; user-select: none; }
+  .b:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+  .b.active-badge { box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor; transform: translateY(-1px); }
+  .bt { background: var(--teal-light); color: var(--teal-dark); }
+  .bb { background: var(--blue-light); color: var(--blue-dark); }
+  .bp { background: var(--purple-light); color: var(--purple-dark); }
+  .ba { background: var(--amber-light); color: var(--amber-dark); }
+  #badge-info { font-size: 12px; color: var(--text2); margin-top: 8px; padding: 6px 10px; background: var(--bg2); border-radius: var(--radius-sm); border: 1px solid var(--border); display: none; line-height: 1.55; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 2px; margin-bottom: 1rem; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { padding: 9px 15px; font-size: 12.5px; cursor: pointer; border: none; background: none; color: var(--text2); border-bottom: 2.5px solid transparent; margin-bottom: -1px; font-family: var(--font); white-space: nowrap; transition: color .15s; }
+  .tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
+  .tab:hover:not(.active) { color: var(--text); }
+  .panel { display: none; } .panel.active { display: block; }
+
+  /* CARDS */
+  .sl { font-size: 10.5px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; margin: 1.25rem 0 9px; }
+  .sl:first-child { margin-top: 0; }
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 10px; }
+  .ct { font-size: 14.5px; font-weight: 600; color: var(--text); }
+  .cs { font-size: 11.5px; color: var(--text2); margin-top: 2px; }
+  .cb { font-size: 13px; color: var(--text2); margin-top: 9px; line-height: 1.65; border-top: 1px solid var(--border); padding-top: 9px; }
+  .tgs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .tg { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--bg2); color: var(--text2); border: 1px solid var(--border); }
+  .mrow { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.2rem; }
+  .met { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .mv { font-size: 24px; font-weight: 700; color: var(--teal); }
+  .ml { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .row2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 10px; }
+
+  /* VIZ */
+  .viz-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .viz-head { font-size: 14px; font-weight: 600; color: var(--text); }
+  .viz-sub { font-size: 11.5px; color: var(--text2); margin-top: 2px; }
+  .canvas-box { position: relative; width: 100%; height: 230px; margin-top: 14px; }
+  .canvas-box-lg { height: 270px; }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+  .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .leg-line { width: 18px; height: 2px; flex-shrink: 0; }
+  .insight-box { margin-top: 10px; padding: 9px 12px; background: var(--teal-light); border-radius: var(--radius-sm); border-left: 3px solid var(--teal); font-size: 12px; color: var(--teal-dark); line-height: 1.55; }
+  .error-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  @media(max-width:540px) { .error-grid { grid-template-columns: 1fr; } .mrow { grid-template-columns: 1fr 1fr; } }
+  .mini-stat { background: var(--bg2); border-radius: var(--radius-sm); padding: 10px 12px; border: 1px solid var(--border); }
+  .mini-val { font-size: 18px; font-weight: 700; color: var(--text); }
+  .mini-lbl { font-size: 10.5px; color: var(--text2); margin-top: 1px; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 22px; }
+  .tl-line { position: absolute; left: 6px; top: 4px; bottom: 4px; width: 1.5px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 18px; }
+  .tl-dot { position: absolute; left: -18px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--teal); border: 2px solid var(--bg); }
+  .tl-year { font-size: 11px; color: var(--teal); font-weight: 600; }
+  .tl-title { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
+  .tl-body { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.55; }
+  .blockquote { border-left: 3px solid var(--teal); padding-left: 12px; margin: 10px 0; font-size: 13px; color: var(--text2); font-style: italic; line-height: 1.65; }
+
+  /* IRT/CTT */
+  .irt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  @media(max-width:540px) { .irt-grid { grid-template-columns: 1fr; } }
+  .irt-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; }
+  .irt-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .irt-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  .compare-table th { background: var(--bg2); padding: 8px 10px; text-align: left; font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+  .compare-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .tag-teal { background: var(--teal-light); color: var(--teal-dark); padding: 1px 6px; border-radius: 3px; font-size: 10.5px; font-weight: 600; }
+  .tag-blue { background: var(--blue-light); color: var(--blue-dark); padding: 1px 6px; border-radius: 3px; font-size: 10.5px; font-weight: 600; }
+
+  /* TOOL JOURNEY */
+  .journey { display: flex; align-items: flex-start; gap: 0; flex-wrap: wrap; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+  .jstep { text-align: center; min-width: 72px; }
+  .jbox { width: 56px; height: 56px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin: 0 auto; }
+  .jlbl { font-size: 10px; color: var(--text2); margin-top: 5px; line-height: 1.3; }
+  .jarrow { font-size: 18px; color: var(--border); align-self: center; padding: 0 2px; margin-top: -8px; }
+
+  /* ACTION BUTTONS */
+  .action-btn { font-size: 12.5px; padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; font-family: var(--font); transition: all .15s; display: inline-flex; align-items: center; gap: 5px; }
+  .action-btn:hover { background: var(--teal-light); border-color: var(--teal); color: var(--teal-dark); }
+  .action-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="pf">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="av">LN</div>
+  <div style="flex:1;">
+    <h1>Lucky Nzioki</h1>
+    <div class="sub">Data Analyst &nbsp;·&nbsp; Data Scientist &nbsp;·&nbsp; Data Engineer<br>BSc Statistics (Pure), Meru University &nbsp;|&nbsp; MSc Data Science, Open University</div>
+    <div class="email">luckynzioki@gmail.com &nbsp;·&nbsp; Nairobi, Kenya</div>
+    <div class="bdgs">
+      <span class="b bt" onclick="showBadge(this,'Statistical modelling','Hypothesis testing, ANOVA, regression diagnostics, distributional analysis, and survey-weighted methods applied to real Kenyan socioeconomic datasets.')">Statistical modelling</span>
+      <span class="b bb" onclick="showBadge(this,'Machine learning','Supervised and unsupervised ML: logistic regression, random forest, gradient boosting, PCA, k-means clustering — validated with AUC-ROC, RMSE, MAPE and stratified cross-validation.')">Machine learning</span>
+      <span class="b bp" onclick="showBadge(this,'Data engineering','End-to-end ETL pipelines, Hadoop/HDFS distributed systems, PostgreSQL data warehousing, automated cron-scheduled jobs with data-quality checks.')">Data engineering</span>
+      <span class="b ba" onclick="showBadge(this,'Big data · Hadoop','MapReduce parallel computation on 4-node clusters; Hive querying; reduced query time from minutes to under 20 seconds at scale.')">Big data · Hadoop</span>
+      <span class="b bt" onclick="showBadge(this,'Python · R · Stata','Python (scikit-learn, pandas, matplotlib), R (ggplot2, tidyverse, survey), Stata — fluent across all three for different analytical contexts.')">Python · R · Stata</span>
+    </div>
+    <div id="badge-info"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="sw('overview',this)">Overview</button>
+  <button class="tab" onclick="sw('analyst',this)">Data analyst</button>
+  <button class="tab" onclick="sw('scientist',this)">Data scientist</button>
+  <button class="tab" onclick="sw('engineer',this)">Data engineer</button>
+  <button class="tab" onclick="sw('vizwork',this)">Visualisations</button>
+  <button class="tab" onclick="sw('psycho',this)">Psychometrics</button>
+  <button class="tab" onclick="sw('education',this)">Education</button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="overview" class="panel active">
+  <div class="mrow">
+    <div class="met"><div class="mv">3</div><div class="ml">Specialisations</div></div>
+    <div class="met"><div class="mv">6+</div><div class="ml">Tools mastered</div></div>
+    <div class="met"><div class="mv">2</div><div class="ml">Degrees</div></div>
+  </div>
+  <div class="blockquote">I am a multidisciplinary data professional with a rigorous academic grounding in pure statistics and graduate-level expertise in data science. My career spans the full data value chain — from raw data ingestion and pipeline engineering to inferential modelling and executive-ready visualisation. I approach every problem with scientific precision, translating complex quantitative findings into clear, actionable intelligence.</div>
+  <p class="sl">Tool proficiency journey</p>
+  <div class="card">
+    <div class="journey">
+      <div class="jstep"><div class="jbox" style="background:var(--teal-light);color:var(--teal-dark);">Stata</div><div class="jlbl">Foundation<br>survey stats</div></div>
+      <div class="jarrow">›</div>
+      <div class="jstep"><div class="jbox" style="background:var(--blue-light);color:var(--blue-dark);">R</div><div class="jlbl">Statistical<br>computing</div></div>
+      <div class="jarrow">›</div>
+      <div class="jstep"><div class="jbox" style="background:var(--purple-light);color:var(--purple-dark);">Python</div><div class="jlbl">Core ML<br>language</div></div>
+      <div class="jarrow">›</div>
+      <div class="jstep"><div class="jbox" style="background:var(--amber-light);color:var(--amber-dark);">Hadoop</div><div class="jlbl">Big data<br>engineering</div></div>
+      <div class="jarrow">›</div>
+      <div class="jstep"><div class="jbox" style="background:#FDE8E8;color:#9B1C1C;">SQL</div><div class="jlbl">Warehousing<br>PostgreSQL</div></div>
+    </div>
+  </div>
+  <p class="sl">Core competencies</p>
+  <div class="row2">
+    <div class="card"><div class="ct">Statistical inference</div><div class="cb">Hypothesis testing, confidence intervals, ANOVA, regression diagnostics — applied with the precision demanded by a BSc in Pure Statistics.</div></div>
+    <div class="card"><div class="ct">Predictive modelling</div><div class="cb">Supervised and unsupervised ML models built and validated in Python, integrating academic statistical rigour with modern scikit-learn workflows.</div></div>
+    <div class="card"><div class="ct">Data pipeline design</div><div class="cb">End-to-end ETL pipelines in Python and Hadoop/HDFS, designed for scalability, fault tolerance, and reproducibility.</div></div>
+    <div class="card"><div class="ct">Psychometrics</div><div class="cb">Classical Test Theory and Item Response Theory applied to educational and survey data — reliability, validity, item analysis, and DIF detection.</div></div>
+  </div>
+</div>
+
+<!-- DATA ANALYST -->
+<div id="analyst" class="panel">
+  <p class="sl">Selected projects</p>
+  <div class="card">
+    <div class="ct">Household income inequality analysis — Kenya</div>
+    <div class="cs">Academic project · BSc final year · Stata & R</div>
+    <div class="cb">Conducted a comprehensive distributional analysis of household income data using the Gini coefficient, Lorenz curves, and quintile decomposition. Applied survey-weighted regression to identify structural predictors of income disparity across rural and urban counties. Findings revealed that access to formal employment and secondary education explained over 60% of inter-county income variance. Report delivered with publication-quality tables and annotated R Markdown output.</div>
+    <div class="tgs"><span class="tg">Stata</span><span class="tg">R</span><span class="tg">Gini coefficient</span><span class="tg">Survey-weighted regression</span><span class="tg">Lorenz curves</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">Retail sales trend dashboard</div>
+    <div class="cs">Analytical project · Python · pandas · matplotlib</div>
+    <div class="cb">Cleaned and restructured a 50,000-row transactional dataset, resolving duplicates, currency inconsistencies, and missing temporal fields. Performed time series decomposition to isolate seasonality and built a dynamic reporting dashboard. Identified a recurring Q3 demand dip attributable to school-term purchasing behaviour — informing promotional scheduling.</div>
+    <div class="tgs"><span class="tg">Python</span><span class="tg">pandas</span><span class="tg">matplotlib</span><span class="tg">Time series</span><span class="tg">Dashboard design</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">Public health indicators — sub-Saharan Africa</div>
+    <div class="cs">MSc coursework · Open University · R</div>
+    <div class="cb">Analysed WHO datasets to produce a comparative report on under-five mortality and malnutrition prevalence. Applied EDA, correlation matrices, and choropleth mapping in R. Wrote a structured academic report with methodology, results, and policy implications sections.</div>
+    <div class="tgs"><span class="tg">R</span><span class="tg">ggplot2</span><span class="tg">WHO data</span><span class="tg">Choropleth mapping</span><span class="tg">EDA</span></div>
+  </div>
+</div>
+
+<!-- DATA SCIENTIST -->
+<div id="scientist" class="panel">
+  <p class="sl">Selected projects</p>
+  <div class="card">
+    <div class="ct">Credit default risk prediction model</div>
+    <div class="cs">MSc Data Science project · Python · scikit-learn</div>
+    <div class="cb">Developed a binary classification pipeline using logistic regression, random forest, and gradient boosting. Applied SMOTE for class imbalance (4.2% default rate). Final ensemble: AUC-ROC 0.91, recall 0.87 on minority class. Feature importance: recent payment history and credit utilisation ratio were top predictors.</div>
+    <div class="tgs"><span class="tg">Python</span><span class="tg">scikit-learn</span><span class="tg">SMOTE</span><span class="tg">AUC-ROC</span><span class="tg">Ensemble methods</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">Agricultural yield forecasting — maize production</div>
+    <div class="cs">Applied research · R · time series · regression</div>
+    <div class="cb">Multivariate regression + ARIMA for county-level maize yield in Kenya using rainfall, fertiliser, and soil data. Out-of-sample MAPE: 8.3% vs 14.7% baseline — a 44% improvement with direct food-security planning implications.</div>
+    <div class="tgs"><span class="tg">R</span><span class="tg">ARIMA</span><span class="tg">Multivariate regression</span><span class="tg">RMSE</span><span class="tg">MAPE</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">Student performance clustering analysis</div>
+    <div class="cs">Exploratory ML project · Python · k-means · PCA</div>
+    <div class="cb">PCA + k-means on 18-dimensional student performance data (5 semesters). Three principal components explained 74% of variance. Four student archetypes identified: consistent achievers, late bloomers, early decliners, and persistently struggling learners — each with differentiated intervention implications.</div>
+    <div class="tgs"><span class="tg">Python</span><span class="tg">PCA</span><span class="tg">k-means</span><span class="tg">Unsupervised learning</span><span class="tg">Dimensionality reduction</span></div>
+  </div>
+</div>
+
+<!-- DATA ENGINEER -->
+<div id="engineer" class="panel">
+  <p class="sl">Selected projects</p>
+  <div class="card">
+    <div class="ct">Large-scale log processing pipeline — Hadoop</div>
+    <div class="cs">Data engineering project · Hadoop · HDFS · Hive</div>
+    <div class="cb">Distributed log-processing pipeline on Hadoop: HDFS storage, MapReduce computation, Hive querying. Reduced query time from several minutes to under 20 seconds on a 4-node cluster. Designed with fault-tolerant job configurations for pipeline continuity under node failure.</div>
+    <div class="tgs"><span class="tg">Hadoop</span><span class="tg">HDFS</span><span class="tg">MapReduce</span><span class="tg">Hive</span><span class="tg">Distributed systems</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">Automated ETL pipeline for financial datasets</div>
+    <div class="cs">Python automation · pandas · SQLAlchemy · PostgreSQL</div>
+    <div class="cb">Fully automated ETL in Python extracting monthly financial reports from CSV, Excel, and JSON. Applied currency normalisation, null imputation, and schema alignment before loading to PostgreSQL. Cron-scheduled; reduced manual data prep from ~6 hours/week to near zero with automated quality assertions at each stage.</div>
+    <div class="tgs"><span class="tg">Python</span><span class="tg">SQLAlchemy</span><span class="tg">PostgreSQL</span><span class="tg">ETL</span><span class="tg">Automation</span></div>
+  </div>
+</div>
+
+<!-- VISUALISATIONS -->
+<div id="vizwork" class="panel">
+  <p class="sl">Live visualisation samples</p>
+
+  <!-- Chart 1: Model comparison with error analysis -->
+  <div class="viz-wrap">
+    <div class="viz-head">Model accuracy distribution — credit default classifiers</div>
+    <div class="viz-sub">Simulated from MSc classification project · Python equivalent: seaborn · error bars show ±1 SD from 10-fold CV</div>
+    <div class="canvas-box"><canvas id="c1"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Logistic regression</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>Random forest</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7F77DD"></div>Gradient boosting</div>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="sl" style="margin-top:0;margin-bottom:6px;">Error analysis</div>
+      <div class="error-grid">
+        <div class="mini-stat"><div class="mini-val">±0.04</div><div class="mini-lbl">CV std dev — Logistic regression</div></div>
+        <div class="mini-stat"><div class="mini-val">±0.03</div><div class="mini-lbl">CV std dev — Random forest</div></div>
+        <div class="mini-stat"><div class="mini-val">±0.02</div><div class="mini-lbl">CV std dev — Gradient boosting</div></div>
+        <div class="mini-stat"><div class="mini-val">0.12</div><div class="mini-lbl">AUC improvement: LR → GBM</div></div>
+      </div>
+    </div>
+    <div class="insight-box">📊 Gradient boosting achieves the highest mean AUC-ROC (0.91) with the tightest confidence band (±0.02), indicating both superior performance and lower variance across folds — the preferred model for deployment under asymmetric misclassification costs.</div>
+  </div>
+
+  <!-- Chart 2: Training curves — model learning -->
+  <div class="viz-wrap">
+    <div class="viz-head">Model training curve — gradient boosting (learning dynamics)</div>
+    <div class="viz-sub">Training loss vs validation loss across boosting rounds · demonstrates convergence and early-stopping criteria</div>
+    <div class="canvas-box canvas-box-lg"><canvas id="c_train"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-line" style="background:#1D9E75"></div>Training loss</div>
+      <div class="leg-item"><div class="leg-line" style="background:#D85A30;border-top:2px dashed #D85A30;background:none;"></div>Validation loss</div>
+      <div class="leg-item"><div class="leg-line" style="background:#EF9F27"></div>Early stop point</div>
+    </div>
+    <div class="insight-box">🎯 Training and validation loss converge around round 85, after which validation loss plateaus and begins to diverge — indicating the optimal early-stopping threshold. The gap between the two curves (shaded region) reflects the degree of overfitting controlled by the regularisation hyperparameters.</div>
+  </div>
+
+  <!-- Chart 3: Maize yield forecast -->
+  <div class="viz-wrap">
+    <div class="viz-head">Maize yield forecast vs actual (2018–2023)</div>
+    <div class="viz-sub">Multivariate regression + ARIMA · R · forecast uncertainty bands shown</div>
+    <div class="canvas-box"><canvas id="c2"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>Actual yield</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Model forecast</div>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="error-grid">
+        <div class="mini-stat"><div class="mini-val">8.3%</div><div class="mini-lbl">Out-of-sample MAPE (model)</div></div>
+        <div class="mini-stat"><div class="mini-val">14.7%</div><div class="mini-lbl">MAPE — moving average baseline</div></div>
+        <div class="mini-stat"><div class="mini-val">0.21</div><div class="mini-lbl">RMSE (t/ha)</div></div>
+        <div class="mini-stat"><div class="mini-val">44%</div><div class="mini-lbl">Improvement over baseline</div></div>
+      </div>
+    </div>
+    <div class="insight-box">🌽 The model closely tracks actual yields with a MAPE of 8.3%, outperforming the moving-average baseline by 44%. The 2020 underestimation reflects the COVID-19 supply chain disruption — an exogenous shock not captured by the model's agricultural covariates.</div>
+  </div>
+
+  <!-- Chart 4: PCA scatter -->
+  <div class="viz-wrap">
+    <div class="viz-head">Student cluster distribution (PCA principal components)</div>
+    <div class="viz-sub">k-means k=4 applied after PCA reduction · 74% variance explained by PC1 + PC2</div>
+    <div class="canvas-box"><canvas id="c3"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>Consistent achievers</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Late bloomers</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7F77DD"></div>Early decliners</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#D85A30"></div>Struggling learners</div>
+    </div>
+    <div class="insight-box">📚 Four student archetypes emerge with clean separation in PCA space. PC1 (horizontal) correlates strongly with cumulative GPA trajectory; PC2 (vertical) captures rate-of-change in performance. The "Late bloomer" cluster (upper-left) is of particular intervention interest — students who underperform early but recover significantly.</div>
+  </div>
+
+  <!-- Chart 5: Lorenz curves + Gini -->
+  <div class="viz-wrap">
+    <div class="viz-head">Lorenz curves — household income inequality by region</div>
+    <div class="viz-sub">BSc final year project · Stata & R · Gini coefficients computed from survey-weighted data</div>
+    <div class="canvas-box canvas-box-lg"><canvas id="c_lorenz"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>Urban (Gini: 0.42)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Peri-urban (Gini: 0.44)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#EF9F27"></div>Rural (Gini: 0.48)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#aaa"></div>Perfect equality</div>
+    </div>
+    <div class="insight-box">📉 Rural areas exhibit the highest income concentration (Gini 0.48), with the bottom 40% of households capturing only 13% of total income. Urban areas show marginally lower inequality (Gini 0.42), consistent with wider formal-sector employment — a finding aligned with Kenya's structural economic duality.</div>
+  </div>
+
+  <!-- Chart 6: Income quintile stacked bar -->
+  <div class="viz-wrap">
+    <div class="viz-head">Household income quintile share by region</div>
+    <div class="viz-sub">Survey-weighted distributional analysis · Stata/R equivalent: stacked bar</div>
+    <div class="canvas-box"><canvas id="c4"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#D85A30"></div>Bottom quintile</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#EF9F27"></div>Second quintile</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Middle quintile</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7F77DD"></div>Fourth quintile</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>Top quintile</div>
+    </div>
+    <div class="insight-box">💰 The top quintile captures over 40% of income in all regions, peaking at 46% in rural areas. Formal employment and secondary education explained over 60% of inter-county income variance in the regression model.</div>
+  </div>
+</div>
+
+<!-- PSYCHOMETRICS (NEW) -->
+<div id="psycho" class="panel">
+  <p class="sl">Measurement theory background</p>
+  <div class="card">
+    <div class="ct">Classical Test Theory (CTT)</div>
+    <div class="cs">Foundation of psychometric analysis · BSc & MSc statistical methods</div>
+    <div class="cb">CTT models an observed score as the sum of a true score and measurement error: <strong>X = T + E</strong>. The framework underpins reliability estimation (Cronbach's α, split-half, test-retest) and item analysis through difficulty indices and point-biserial correlations. CTT remains widely used due to its simplicity and modest sample requirements, though its item statistics are sample-dependent.</div>
+    <div class="canvas-box" style="height:210px;margin-top:12px;"><canvas id="c_ctt"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>Easy items (p &gt; 0.70)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Moderate items (0.30–0.70)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#D85A30"></div>Hard items (p &lt; 0.30)</div>
+    </div>
+    <div class="insight-box">🔬 Item difficulty (p-value) and item-total correlation (point-biserial r) are the two core CTT item statistics. The scatter above reveals that most moderate-difficulty items have the highest discriminating power — consistent with measurement theory predictions.</div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="ct">Item Response Theory (IRT)</div>
+    <div class="cs">Modern psychometrics · 2PL and 3PL models · applied in education and survey research</div>
+    <div class="cb">IRT models the probability of a correct response as a function of person ability (θ) and item parameters. The 3-parameter logistic model (3PL) incorporates discrimination (a), difficulty (b), and guessing (c). Unlike CTT, IRT item parameters are sample-independent and person ability estimates are item-independent — enabling adaptive testing, equating, and differential item functioning (DIF) analysis.</div>
+    <div class="canvas-box canvas-box-lg" style="margin-top:12px;"><canvas id="c_irt"></canvas></div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#1D9E75"></div>High discrimination (a=1.8)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Moderate discrimination (a=1.0)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#D85A30"></div>Low discrimination (a=0.5)</div>
+    </div>
+    <div class="insight-box">📈 Item Characteristic Curves (ICCs) show the probability of a correct response across the ability continuum. Steeper curves (higher a-parameter) indicate more discriminating items. The inflection point on the curve corresponds to the item's difficulty parameter b.</div>
+  </div>
+
+  <p class="sl">CTT vs IRT — framework comparison</p>
+  <div class="card">
+    <table class="compare-table">
+      <tr><th>Dimension</th><th><span class="tag-teal">CTT</span> Classical Test Theory</th><th><span class="tag-blue">IRT</span> Item Response Theory</th></tr>
+      <tr><td><strong>Core model</strong></td><td>X = T + E (observed = true + error)</td><td>P(correct) = f(θ, a, b, c)</td></tr>
+      <tr><td><strong>Item statistics</strong></td><td>Sample-dependent (p-value, r_pb)</td><td>Sample-independent (a, b, c parameters)</td></tr>
+      <tr><td><strong>Person scores</strong></td><td>Item-dependent (raw or percent correct)</td><td>Item-independent (θ on latent scale)</td></tr>
+      <tr><td><strong>Reliability</strong></td><td>Cronbach's α, split-half, test-retest</td><td>Test information function (TIF)</td></tr>
+      <tr><td><strong>Sample size</strong></td><td>Small to moderate (n ≥ 100)</td><td>Larger (n ≥ 200–1000 for 3PL)</td></tr>
+      <tr><td><strong>Key applications</strong></td><td>Scale development, pilot testing</td><td>Adaptive testing, DIF analysis, equating</td></tr>
+      <tr><td><strong>Limitation</strong></td><td>Item stats change across populations</td><td>Requires model-fit evaluation; complex estimation</td></tr>
+    </table>
+  </div>
+
+  <p class="sl">Key psychometric concepts</p>
+  <div class="irt-grid">
+    <div class="irt-card"><div class="irt-title">Reliability (CTT)</div><div class="irt-text">Consistency of measurement. Estimated via Cronbach's α (internal consistency), test-retest correlation, or split-half coefficient. α &gt; 0.70 conventionally acceptable; α &gt; 0.90 for high-stakes decisions.</div></div>
+    <div class="irt-card"><div class="irt-title">Test Information Function (IRT)</div><div class="irt-text">IRT equivalent of reliability — specifies where on the ability scale a test is most precise. Peaks at the ability level where items are most discriminating. Enables targeted test construction for specific θ ranges.</div></div>
+    <div class="irt-card"><div class="irt-title">Differential Item Functioning (DIF)</div><div class="irt-text">An item exhibits DIF when examinees of equal ability from different groups have systematically different probabilities of a correct response. Detected via Mantel-Haenszel or IRT likelihood-ratio methods. Critical for test fairness and validity.</div></div>
+    <div class="irt-card"><div class="irt-title">Construct Validity</div><div class="irt-text">Evidence that a test measures the intended latent construct. Evaluated through factor analysis (convergent & discriminant validity), known-groups comparisons, and structural equation modelling — all applicable under both CTT and IRT frameworks.</div></div>
+    <div class="irt-card"><div class="irt-title">Item Difficulty (p-value)</div><div class="irt-text">In CTT: proportion of respondents answering correctly. In IRT: the b-parameter (difficulty) is the ability level at which P(correct) = 0.50 (or 0.5+c/2 in 3PL). Optimal test design targets moderate difficulty (0.30–0.70 in CTT).</div></div>
+    <div class="irt-card"><div class="irt-title">Point-Biserial Discrimination</div><div class="irt-text">CTT measure of item quality — correlation between item score (0/1) and total test score. Values below 0.20 indicate poor discrimination; negative values indicate item miskeys or construct contamination. Analogous to the a-parameter in IRT.</div></div>
+  </div>
+
+  <div class="canvas-box canvas-box-lg" style="margin-top:12px;"><canvas id="c_tif"></canvas></div>
+  <div class="insight-box" style="margin-top:8px;">🔭 The Test Information Function (TIF) peaks at θ ≈ 0, indicating the test discriminates best among average-ability examinees. Measurement error (SE = 1/√I(θ)) is lowest at the peak and rises at the extremes — implying that pass/fail decisions near the cut-score are most reliable.</div>
+
+  <div class="action-btn-row">
+    <button class="action-btn" onclick="sendPrompt('Help me conduct a CTT item analysis for my exam data in R')">Run CTT item analysis in R ↗</button>
+    <button class="action-btn" onclick="sendPrompt('Explain how to fit a 2PL IRT model in R using the mirt package')">Fit IRT model with mirt ↗</button>
+    <button class="action-btn" onclick="sendPrompt('How do I detect differential item functioning using the Mantel-Haenszel method?')">DIF detection guide ↗</button>
+  </div>
+</div>
+
+<!-- EDUCATION -->
+<div id="education" class="panel">
+  <p class="sl">Academic background</p>
+  <div class="timeline">
+    <div class="tl-line"></div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">In progress</div>
+      <div class="tl-title">MSc Data Science — Open University</div>
+      <div class="tl-body">Graduate-level study spanning machine learning theory, advanced statistical inference, data engineering, and research methodology. The programme bridges rigorous quantitative foundations with applied data science practice. Developing advanced competencies in experimental design, model interpretability, psychometrics, and ethical data use.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#378ADD;"></div>
+      <div class="tl-year">Completed</div>
+      <div class="tl-title">BSc Statistics (Pure) — Meru University</div>
+      <div class="tl-body">Deep theoretical and applied grounding in probability theory, mathematical statistics, regression analysis, experimental design, sampling methods, time series analysis, and statistical computing using Stata and R. Research project applied inferential methods to real-world Kenyan socioeconomic data.</div>
+    </div>
+  </div>
+  <p class="sl" style="margin-top:1.5rem;">Academic writing proficiency</p>
+  <div class="card">
+    <div class="blockquote" style="margin:0;">Proficient in the conventions of academic and technical writing across quantitative disciplines — including structured literature reviews, methodology sections with clearly stated assumptions and limitations, results sections that contextualise statistical outputs within theoretical frameworks, and discussion chapters that connect empirical findings to broader scholarly debates. Experienced in APA and Harvard referencing styles.</div>
+  </div>
+  <p class="sl">Research competencies</p>
+  <div class="row2">
+    <div class="card"><div class="ct">Research design</div><div class="cb">Formulating testable hypotheses, selecting appropriate study designs (cross-sectional, longitudinal, quasi-experimental), and justifying methodological choices with reference to the literature.</div></div>
+    <div class="card"><div class="ct">Statistical methodology</div><div class="cb">Specifying, estimating, and validating quantitative models; interpreting coefficients with appropriate caveats; reporting results in formats suitable for peer-reviewed submission.</div></div>
+    <div class="card"><div class="ct">Critical analysis</div><div class="cb">Synthesising conflicting empirical evidence, identifying gaps in existing literature, and positioning original work within established theoretical discourse.</div></div>
+    <div class="card"><div class="ct">Academic integrity</div><div class="cb">Reproducible research practices — documented code, version-controlled analysis, transparent reporting of data sources, transformations, and model assumptions.</div></div>
+  </div>
+</div>
+
+</div><!-- end .pf -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// Badge click interaction
+const badgeInfo = {
+  'Statistical modelling': 'Hypothesis testing, ANOVA, regression diagnostics, distributional analysis, and survey-weighted methods applied to real Kenyan socioeconomic datasets.',
+  'Machine learning': 'Supervised and unsupervised ML: logistic regression, random forest, gradient boosting, PCA, k-means clustering — validated with AUC-ROC, RMSE, MAPE and stratified cross-validation.',
+  'Data engineering': 'End-to-end ETL pipelines, Hadoop/HDFS distributed systems, PostgreSQL data warehousing, automated cron-scheduled jobs with data-quality checks.',
+  'Big data · Hadoop': 'MapReduce parallel computation on 4-node clusters; Hive querying; reduced query time from minutes to under 20 seconds at scale.',
+  'Python · R · Stata': 'Python (scikit-learn, pandas, matplotlib), R (ggplot2, tidyverse, survey), Stata — fluent across all three for different analytical contexts.'
+};
+function showBadge(el, name, text) {
+  const box = document.getElementById('badge-info');
+  const allBadges = document.querySelectorAll('.b');
+  if (el.classList.contains('active-badge')) {
+    el.classList.remove('active-badge');
+    box.style.display = 'none';
+    return;
+  }
+  allBadges.forEach(b => b.classList.remove('active-badge'));
+  el.classList.add('active-badge');
+  box.innerHTML = '<strong>' + name + '</strong> — ' + text;
+  box.style.display = 'block';
+}
+
+function sw(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'vizwork') setTimeout(drawViz, 80);
+  if (id === 'psycho') setTimeout(drawPsycho, 80);
+}
+
+function sendPrompt(txt) {
+  if (typeof window.sendPrompt === 'function') window.sendPrompt(txt);
+}
+
+// ─── VIZ CHARTS ───────────────────────────────────────────────
+let vizDrawn = false;
+function drawViz() {
+  if (vizDrawn) return; vizDrawn = true;
+  const teal='#1D9E75', blue='#378ADD', purple='#7F77DD', amber='#EF9F27', coral='#D85A30';
+  const grid='rgba(128,128,128,0.1)';
+  const tick = getComputedStyle(document.documentElement).getPropertyValue('--text2') || '#6B7280';
+
+  // C1: Model accuracy with error bars
+  new Chart(document.getElementById('c1'), {
+    type: 'bar',
+    data: {
+      labels: ['Logistic regression','Random forest','Gradient boosting'],
+      datasets: [{
+        label: 'Mean AUC-ROC',
+        data: [0.79, 0.88, 0.91],
+        backgroundColor: [blue+'CC', teal+'CC', purple+'CC'],
+        borderColor: [blue, teal, purple],
+        borderWidth: 1.5,
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            afterBody: (items) => {
+              const sds = [0.04, 0.03, 0.02];
+              return ['Std dev: ±' + sds[items[0].dataIndex]];
+            }
+          }
+        }
+      },
+      scales: {
+        y: { min: 0.6, max: 1.0, ticks: { callback: v => v.toFixed(2), color: '#888' }, grid: { color: grid } },
+        x: { ticks: { color: '#888' }, grid: { color: 'transparent' } }
+      }
+    }
+  });
+
+  // C_TRAIN: Training curves
+  const rounds = Array.from({length:120}, (_,i)=>i+1);
+  const trainLoss = rounds.map(r => 0.85 * Math.exp(-r/30) + 0.12 + (Math.random()-0.5)*0.01);
+  const valLoss = rounds.map((r,i) => {
+    const base = 0.78 * Math.exp(-r/28) + 0.19;
+    const overfit = r > 85 ? (r-85)*0.001 : 0;
+    return base + overfit + (Math.random()-0.5)*0.012;
+  });
+  new Chart(document.getElementById('c_train'), {
+    type: 'line',
+    data: {
+      labels: rounds,
+      datasets: [
+        { label: 'Training loss', data: trainLoss, borderColor: teal, borderWidth: 2, pointRadius: 0, tension: 0.4, fill: false },
+        { label: 'Validation loss', data: valLoss, borderColor: coral, borderWidth: 2, borderDash: [5,4], pointRadius: 0, tension: 0.4, fill: false },
+        { label: 'Early stop', data: rounds.map(r => r === 85 ? null : null), borderColor: amber, borderWidth: 0 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        annotation: {}
+      },
+      scales: {
+        x: { title: { display: true, text: 'Boosting round', color: '#888', font: { size: 11 } }, ticks: { color: '#888', maxTicksLimit: 10 }, grid: { color: grid } },
+        y: { title: { display: true, text: 'Log-loss', color: '#888', font: { size: 11 } }, ticks: { color: '#888', callback: v => v.toFixed(2) }, grid: { color: grid } }
+      }
+    },
+    plugins: [{
+      id: 'earlyStop',
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const x = chart.scales.x.getPixelForValue(85);
+        ctx.save();
+        ctx.strokeStyle = amber;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6,3]);
+        ctx.beginPath();
+        ctx.moveTo(x, chart.scales.y.top);
+        ctx.lineTo(x, chart.scales.y.bottom);
+        ctx.stroke();
+        ctx.fillStyle = amber;
+        ctx.font = '10px sans-serif';
+        ctx.fillText('Early stop (round 85)', x+4, chart.scales.y.top+14);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // C2: Maize forecast
+  new Chart(document.getElementById('c2'), {
+    type: 'line',
+    data: {
+      labels: ['2018','2019','2020','2021','2022','2023'],
+      datasets: [
+        { label: 'Actual', data: [2.1,2.4,2.2,2.8,3.0,3.3], borderColor: teal, backgroundColor: 'rgba(29,158,117,.08)', fill: true, tension: 0.3, pointRadius: 5, pointBackgroundColor: teal },
+        { label: 'Forecast', data: [2.0,2.3,2.3,2.6,3.1,3.4], borderColor: blue, borderDash: [5,4], tension: 0.3, pointRadius: 5, pointBackgroundColor: blue }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v.toFixed(1)+' t/ha', color: '#888' }, grid: { color: grid } }, x: { ticks: { color: '#888' }, grid: { color: 'transparent' } } } }
+  });
+
+  // C3: PCA scatter
+  const clusters = [
+    {x:1.2,y:2.1,c:teal},{x:1.5,y:1.9,c:teal},{x:1.1,y:2.4,c:teal},{x:1.8,y:2.2,c:teal},{x:1.4,y:2.6,c:teal},
+    {x:-1.5,y:1.2,c:blue},{x:-1.8,y:0.9,c:blue},{x:-1.3,y:1.5,c:blue},{x:-2.0,y:1.1,c:blue},{x:-1.6,y:1.4,c:blue},
+    {x:0.3,y:-1.8,c:purple},{x:0.5,y:-2.1,c:purple},{x:0.1,y:-1.6,c:purple},{x:0.7,y:-2.3,c:purple},
+    {x:-0.8,y:-0.5,c:coral},{x:-1.1,y:-0.3,c:coral},{x:-0.6,y:-0.8,c:coral},{x:-1.3,y:-0.6,c:coral},{x:-0.9,y:-1.0,c:coral}
+  ];
+  new Chart(document.getElementById('c3'), {
+    type: 'scatter',
+    data: { datasets: [
+      { label: 'Consistent achievers', data: clusters.filter(d=>d.c===teal).map(d=>({x:d.x,y:d.y})), backgroundColor: teal, pointRadius: 8 },
+      { label: 'Late bloomers', data: clusters.filter(d=>d.c===blue).map(d=>({x:d.x,y:d.y})), backgroundColor: blue, pointRadius: 8 },
+      { label: 'Early decliners', data: clusters.filter(d=>d.c===purple).map(d=>({x:d.x,y:d.y})), backgroundColor: purple, pointRadius: 8 },
+      { label: 'Struggling', data: clusters.filter(d=>d.c===coral).map(d=>({x:d.x,y:d.y})), backgroundColor: coral, pointRadius: 8 }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: {
+      x: { title: { display: true, text: 'PC1 (cumulative GPA trajectory)', color: '#888', font:{size:11} }, ticks: { color: '#888' }, grid: { color: grid } },
+      y: { title: { display: true, text: 'PC2 (rate of change)', color: '#888', font:{size:11} }, ticks: { color: '#888' }, grid: { color: grid } }
+    }}
+  });
+
+  // C_LORENZ: Lorenz curves
+  function lorenz(gini) {
+    const pts = [];
+    for (let i = 0; i <= 10; i++) {
+      const pop = i/10;
+      // Approximate Lorenz from Gini
+      const inc = Math.pow(pop, 1 + gini * 2);
+      pts.push({x: pop, y: inc});
+    }
+    return pts;
+  }
+  new Chart(document.getElementById('c_lorenz'), {
+    type: 'line',
+    data: {
+      datasets: [
+        { label: 'Urban (Gini 0.42)', data: lorenz(0.42), borderColor: teal, borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
+        { label: 'Peri-urban (Gini 0.44)', data: lorenz(0.44), borderColor: blue, borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
+        { label: 'Rural (Gini 0.48)', data: lorenz(0.48), borderColor: amber, borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
+        { label: 'Perfect equality', data: [{x:0,y:0},{x:1,y:1}], borderColor: '#ccc', borderWidth: 1.5, borderDash: [4,4], pointRadius: 0, fill: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { type: 'linear', min: 0, max: 1, title: { display: true, text: 'Cumulative population share', color: '#888', font:{size:11} }, ticks: { callback: v => (v*100)+'%', color: '#888' }, grid: { color: grid } },
+        y: { min: 0, max: 1, title: { display: true, text: 'Cumulative income share', color: '#888', font:{size:11} }, ticks: { callback: v => (v*100)+'%', color: '#888' }, grid: { color: grid } }
+      }
+    }
+  });
+
+  // C4: Stacked bar
+  new Chart(document.getElementById('c4'), {
+    type: 'bar',
+    data: {
+      labels: ['Urban','Peri-urban','Rural'],
+      datasets: [
+        { label: 'Bottom quintile', data:[7,6,5], backgroundColor: coral },
+        { label: 'Second quintile', data:[12,11,10], backgroundColor: amber },
+        { label: 'Middle quintile', data:[18,17,16], backgroundColor: blue },
+        { label: 'Fourth quintile', data:[23,24,23], backgroundColor: purple },
+        { label: 'Top quintile', data:[40,42,46], backgroundColor: teal }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { stacked: true, ticks: { color: '#888' }, grid: { color: 'transparent' } }, y: { stacked: true, ticks: { callback: v => v+'%', color: '#888' }, grid: { color: grid } } } }
+  });
+}
+
+// ─── PSYCHOMETRICS CHARTS ──────────────────────────────────────
+let psychoDrawn = false;
+function drawPsycho() {
+  if (psychoDrawn) return; psychoDrawn = true;
+  const teal='#1D9E75', blue='#378ADD', coral='#D85A30';
+  const grid='rgba(128,128,128,0.1)';
+
+  // CTT: item difficulty vs discrimination scatter
+  const items = [
+    {p:0.82,r:0.22,c:teal},{p:0.78,r:0.31,c:teal},{p:0.85,r:0.18,c:teal},{p:0.73,r:0.29,c:teal},
+    {p:0.55,r:0.48,c:blue},{p:0.61,r:0.52,c:blue},{p:0.48,r:0.55,c:blue},{p:0.52,r:0.49,c:blue},{p:0.44,r:0.57,c:blue},{p:0.38,r:0.51,c:blue},
+    {p:0.22,r:0.28,c:coral},{p:0.18,r:0.19,c:coral},{p:0.25,r:0.33,c:coral},{p:0.12,r:0.14,c:coral}
+  ];
+  new Chart(document.getElementById('c_ctt'), {
+    type: 'scatter',
+    data: { datasets: [
+      { label: 'Easy (p>0.70)', data: items.filter(i=>i.c===teal).map(i=>({x:i.p,y:i.r})), backgroundColor: teal, pointRadius: 8 },
+      { label: 'Moderate (0.30–0.70)', data: items.filter(i=>i.c===blue).map(i=>({x:i.p,y:i.r})), backgroundColor: blue, pointRadius: 8 },
+      { label: 'Hard (p<0.30)', data: items.filter(i=>i.c===coral).map(i=>({x:i.p,y:i.r})), backgroundColor: coral, pointRadius: 8 }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: {
+      x: { min: 0, max: 1, title: { display: true, text: 'Item difficulty (p-value)', color: '#888', font:{size:11} }, ticks: { callback: v => v.toFixed(1), color: '#888' }, grid: { color: grid } },
+      y: { min: 0, max: 0.7, title: { display: true, text: 'Point-biserial r (discrimination)', color: '#888', font:{size:11} }, ticks: { callback: v => v.toFixed(2), color: '#888' }, grid: { color: grid } }
+    }}
+  });
+
+  // IRT: Item characteristic curves (2PL)
+  function icc(theta, a, b) {
+    return 1 / (1 + Math.exp(-a * (theta - b)));
+  }
+  const thetas = Array.from({length:61}, (_,i)=>-3+i*0.1);
+  new Chart(document.getElementById('c_irt'), {
+    type: 'line',
+    data: {
+      labels: thetas.map(t=>t.toFixed(1)),
+      datasets: [
+        { label: 'High discrimination (a=1.8)', data: thetas.map(t=>icc(t,1.8,0.5)), borderColor: teal, borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
+        { label: 'Moderate (a=1.0)', data: thetas.map(t=>icc(t,1.0,0.0)), borderColor: blue, borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false },
+        { label: 'Low discrimination (a=0.5)', data: thetas.map(t=>icc(t,0.5,-0.5)), borderColor: coral, borderWidth: 2.5, pointRadius: 0, tension: 0.2, fill: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: {
+      x: { ticks: { maxTicksLimit: 7, color: '#888', callback: (_,i) => thetas[i] !== undefined ? thetas[i].toFixed(1) : '' }, title: { display: true, text: 'Ability (θ)', color: '#888', font:{size:11} }, grid: { color: grid } },
+      y: { min: 0, max: 1, ticks: { callback: v => v.toFixed(1), color: '#888' }, title: { display: true, text: 'P(correct response)', color: '#888', font:{size:11} }, grid: { color: grid } }
+    }}
+  });
+
+  // TIF: Test Information Function
+  function info2pl(theta, a, b) {
+    const p = icc(theta, a, b);
+    return a*a * p * (1-p);
+  }
+  const items_irt = [{a:1.8,b:0.5},{a:1.0,b:0.0},{a:0.5,b:-0.5},{a:1.4,b:0.8},{a:1.2,b:-0.2},{a:0.8,b:1.0},{a:1.6,b:-0.3}];
+  const tifValues = thetas.map(t => items_irt.reduce((sum,it)=>sum+info2pl(t,it.a,it.b),0));
+  const seValues = tifValues.map(v => v > 0 ? 1/Math.sqrt(v) : 3);
+  new Chart(document.getElementById('c_tif'), {
+    type: 'line',
+    data: {
+      labels: thetas.map(t=>t.toFixed(1)),
+      datasets: [
+        { label: 'Test Information', data: tifValues, borderColor: teal, backgroundColor: 'rgba(29,158,117,.08)', fill: true, borderWidth: 2.5, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+        { label: 'Std Error (SE)', data: seValues, borderColor: coral, borderDash: [5,4], borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y2' }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+      title: { display: true, text: 'Test Information Function (TIF) + Standard Error of Measurement', color: '#333', font:{size:13,weight:'600'} } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 7, color: '#888' }, title: { display: true, text: 'Ability (θ)', color: '#888', font:{size:11} }, grid: { color: grid } },
+        y: { type: 'linear', position: 'left', title: { display: true, text: 'Information I(θ)', color: teal, font:{size:11} }, ticks: { color: '#888' }, grid: { color: grid } },
+        y2: { type: 'linear', position: 'right', title: { display: true, text: 'SE(θ)', color: coral, font:{size:11} }, ticks: { color: '#888' }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
